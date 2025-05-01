@@ -2,12 +2,22 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello') {
+        stage('Build') {
+            agent {
+                docker{
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
             steps {
-                echo 'Hello World from tna-pipeline'
-                sh 'echo "This is another echo from jenkins"'
-                sh 'whoami'
-                sh 'pwd'
+                sh '''
+                ls -al
+                node --version
+                npm --version
+                npm ci
+                npm run build
+                ls -al
+                '''
             }
         }
     }
